@@ -1,0 +1,132 @@
+package com.example.bkgenelmerkez.ortalamahesaplama
+
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
+import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.yeni_ders_layout.view.*
+import java.math.MathContext
+
+class MainActivity : AppCompatActivity() {
+    private val DERSLER = arrayOf("Matematik I","Matematik II", "Fizik I", "Bilgisayar Mühendisliðine Giriþ", "Fizik II","Lineer Cebir","Temel Bilgi Teknolojileri Kullanýmý","Bilgisayar Programlama","Web ve Ýnternet Teknolojileri","Nesneye Dayalý Programlama","Diferansiyel Denklemler","Elektrik Devre Temelleri","Sayýsal Analiz","Veri Tabaný Yönetimi","Veri Yapýlarý","Olasýlýk Ve Ýstatistik","Ayrýk Matematik","Elektroniðe Giriþ")
+
+    private  var tumDerslerinBilgileri:ArrayList<Dersler> = ArrayList(5)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, DERSLER)
+        etDersAd.setAdapter(adapter)
+
+        if (rootLayout.childCount == 0) {
+            btnOrtalamaHesapla.visibility = View.INVISIBLE
+        } else btnOrtalamaHesapla.visibility = View.VISIBLE
+
+
+
+        btnYeniDersEkle.setOnClickListener {
+            if (!etDersAd.text.isNullOrEmpty()) {
+                var inflater = LayoutInflater.from(this)
+                /*var inflater2=layoutInflater böylede tanýmlanabýlýr*/
+                var yeniDersView = inflater.inflate(R.layout.yeni_ders_layout, null)
+//statik alandan kullanýcýnýn gýrdýgý degerlerý alalým
+                yeniDersView.etYeniDersAd.setAdapter(adapter)
+                var dersAdi = etDersAd.text.toString()
+                var dersKredi = spnDersKredi.selectedItem.toString()
+                var dersHarf = spnDersNotu.selectedItem.toString()
+//dinamik oluþturulacak layoutta bulunan view ögelerýne bu degerleri atayalým
+                //böylece yeni layoutumuz kullanýcýnýn gýrmýs oldugu degerler ýle olusturalacaktýr.
+                yeniDersView.etYeniDersAd.setText(dersAdi)
+                yeniDersView.spnYeniDersKredi.setSelection(spinnerDegeriniÝndeksiniBul(spnDersKredi, dersKredi))
+                yeniDersView.spnYeniDersNotu.setSelection(spinnerDegeriniÝndeksiniBul(spnDersNotu, dersHarf))
+
+
+                yeniDersView.btnDersSil.setOnClickListener {
+                    rootLayout.removeView(yeniDersView)
+                    if (rootLayout.childCount == 0) {
+                        btnOrtalamaHesapla.visibility = View.INVISIBLE
+                    } else btnOrtalamaHesapla.visibility = View.VISIBLE
+
+
+                }
+
+
+
+
+                rootLayout.addView(yeniDersView)
+                btnOrtalamaHesapla.visibility = View.VISIBLE
+                sifirla()
+
+            } else {
+                FancyToast.makeText(this,"Ders Adýnýzý Giriniz !",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show()
+            }
+
+
+        }
+    }
+
+    fun sifirla() {
+        etDersAd.setText("")
+        spnDersKredi.setSelection(0)
+        spnDersNotu.setSelection(0)
+    }
+
+
+
+    //spinnera direk olarak string deger atayamýyoruz o yuzden atayacagýmýz strýng deger ýfadenýn karsýlýgý olan
+    //positon degerýný bulan ve býze gerý donduren methodu olusturalým
+    fun spinnerDegeriniÝndeksiniBul(spinner: Spinner, aranacakDeger: String): Int {
+        var index = 0
+        for (i in 0..spinner.count) {
+            if (spinner.getItemAtPosition(i).toString().equals(aranacakDeger)) {
+                index = i
+                break
+            }
+        }
+        return index
+
+    }
+
+    fun ortalamaHesapla(view: View) {
+
+        var toplamNot=0.0
+        var toplamKredi = 0.0
+for (i in 0..rootLayout.childCount-1){
+    var tekSatir=rootLayout.getChildAt(i)
+    var geciciDers=Dersler(tekSatir.etYeniDersAd.text.toString(),((tekSatir.spnYeniDersKredi.selectedItemPosition)+1).toString(),tekSatir.spnYeniDersNotu.selectedItem.toString())
+tumDerslerinBilgileri.add(geciciDers)
+
+}
+        for(oankiDers in tumDerslerinBilgileri )
+        {
+toplamNot+=harfiNotaCevir(oankiDers.dersHarfNot) * (oankiDers.dersKredi.toDouble())
+            toplamKredi+= oankiDers.dersKredi.toDouble()
+        }
+        FancyToast.makeText(this,"ORTALAMA : "+(toplamNot/toplamKredi).toBigDecimal(MathContext(3)),FancyToast.LENGTH_LONG,FancyToast.INFO,true).show()
+tumDerslerinBilgileri.clear()
+    }
+
+
+
+    fun harfiNotaCevir(gelenNotHarfDegeri:String):Double{
+        var deger=0.0
+        when(gelenNotHarfDegeri){
+
+            "AA" -> deger =4.0
+            "BA" -> deger =3.5
+            "BB" -> deger =3.0
+            "CB" -> deger =2.5
+            "CC" -> deger =2.0
+            "DC" -> deger =1.5
+            "DD" -> deger =1.0
+            "FD" -> deger =0.5
+            "FF" -> deger =0.0
+        }
+return deger
+    }
+}
+

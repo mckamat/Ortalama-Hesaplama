@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_editor_absoluteY="25dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/etYeniDersAd"
+        android:layout_width="241dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="34dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/spnYeniDersNotu"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spnYeniDersKredi"
+        android:layout_width="154dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginStart="34dp"
+        android:entries="@array/krediler"
+        android:popupBackground="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spnYeniDersNotu"
+        android:layout_width="154dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="34dp"
+        android:entries="@array/tumNotlar"
+        android:popupBackground="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnDersSil"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/subbb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"
+        tools:layout_editor_absoluteY="108dp"></View>
+
+</android.support.constraint.ConstraintLayout>
